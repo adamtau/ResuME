@@ -7,9 +7,14 @@
   <head>
   <body>
     <form method="POST" action='/login' accept-charset="UTF-8">
-      <input type="email" placeholder="email address" name="email", required>
-      <input type="password" placeholder="password" name="password", required>
-      <input type="submit" name="action" value="login">
+      {{ form.csrf_token }}
+      <dl>
+        <dt>{{ form.email.label }}
+        <dd>{{ form.email }}
+        <dt>{{ form.password.label }}
+        <dd>{{ form.password }}
+        <dt>{{ form.submit }}
+      </dl>
     </form>
   </body>
 </html>
