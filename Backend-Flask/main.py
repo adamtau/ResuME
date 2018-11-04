@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, session
 from flask_pymongo import PyMongo
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, FieldList, FormField, TextAreaField, T
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, FieldList, FormField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError
 import datetime
 from User import *
