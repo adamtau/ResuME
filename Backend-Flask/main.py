@@ -1,7 +1,11 @@
 from flask import Flask, render_template, request, redirect, session
 from flask_pymongo import PyMongo
 from flask_wtf import FlaskForm
+<<<<<<< HEAD
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, FieldList, FormField, TextAreaField, DateField, SelectField
+=======
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, FieldList, FormField, TextAreaField
+>>>>>>> 535391975e110a61c08bb05a505b5de443576502
 from wtforms.validators import DataRequired, ValidationError
 import datetime
 from User import *
