@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, session
 from flask_pymongo import PyMongo
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, FieldList, FormField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, FieldList, FormField, TextAreaField, T
 from wtforms.validators import DataRequired, ValidationError
 import datetime
 from User import *
@@ -44,10 +44,17 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Log In')
 
 class ExperienceEntryForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    company = StringField('Company', validators=[DataRequired()])
-    location = StringField('Location', validators=[DataRequired()])
-    exp_description = TextAreaField('Description', validators=[DataRequired()])
+    title = StringField('Title')
+    start_date = DateField("Start Date", format='%Y-%m-%d')
+    end_date = DateField("End Date", format='%Y-%m-%d')
+    company = StringField('Company')
+    location = StringField('Location')
+    exp_description = TextAreaField('Description')
+
+class EducationEntryForm(FlaskForm):
+    school = StringField('School')
+    major = StringField('Major')
+    location = StringField('Location')
 
 class ProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
@@ -128,8 +135,8 @@ def profile():
     current_profile = user_collection.find_one({"email": session["user_email"]})
     # create a profile_form instance, populated by profile data
     form = ProfileForm(data=current_profile)
+    form.experiences.append_entry()
     # loop through profile experiences, create instances of experience_entry_form, append to profile_form
-    past_experiences = current_profile.get("experiences", [])
     if form.is_submitted():
         # access data in form submission
         first_name = form.first_name.data
@@ -148,7 +155,8 @@ def profile():
                         "company": exp.data["company"], 
                         "location": exp.data["location"], 
                         "exp_description": exp.data["exp_description"]}
-            current_experiences.append(exp_data)
+            if exp_data["title"]:
+            	current_experiences.append(exp_data)
         # update the user's profile in profile collection, if not found, create and insert 
         user_collection.update(
             {"email": session["user_email"]},
