@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, session
 from flask_pymongo import PyMongo
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, FieldList, FormField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError
 import datetime
 from .User import *
@@ -25,6 +25,7 @@ atlas_database = "ResuME"
 atlas_uri = "mongodb://" + atlas_username + ":" + atlas_password + "@cluster0-shard-00-00-eqtre.gcp.mongodb.net:27017,cluster0-shard-00-01-eqtre.gcp.mongodb.net:27017,cluster0-shard-00-02-eqtre.gcp.mongodb.net:27017/" + atlas_database + "?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true"
 app.config["MONGO_URI"] = atlas_uri
 app.config["SECRET_KEY"] = "development key"
+app.config["WTF_CSRF_CHECK_DEFAULT"] = False
 mongo = PyMongo(app)
 db = mongo.db
 
@@ -43,16 +44,23 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Log In')
 
+class ExperienceEntryForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    company = StringField('Company', validators=[DataRequired()])
+    location = StringField('Location', validators=[DataRequired()])
+    exp_description = TextAreaField('Description', validators=[DataRequired()])
+
 class ProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
     major = StringField('Major', validators=[DataRequired()])
     ethnicity = StringField('Ethnicity')
-    description = StringField('Description', validators=[DataRequired()])
+    description = TextAreaField('Description', validators=[DataRequired()])
     address = StringField('Address')
-    summary = StringField('Summary')
+    summary = TextAreaField('Summary')
     bfemail = StringField('BearFounders Email', validators=[DataRequired()])
     bfpassword = PasswordField('BearFounders Password', validators=[DataRequired()])
+    experiences = FieldList(FormField(ExperienceEntryForm), min_entries=1)
     submit = SubmitField('Update')
 
 #####################
@@ -61,12 +69,13 @@ class ProfileForm(FlaskForm):
 
 @app.route('/', methods=['GET'])
 def hello_world():
+    session["user_email"] = ""
     return redirect('/login')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
-    if form.validate_on_submit():
+    if form.is_submitted():
         # access collections in database
         user_collection = db.users
         # access data in form submission
@@ -83,6 +92,7 @@ def register():
                         "date": datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')}
             user_collection.insert_one(new_user)
         # in both cases, redirect to login page after handling the form
+        session["user_email"] = email
         return redirect('/login')
     else:
         # render register page when form is not submitted yet
@@ -90,8 +100,8 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
+    form = LoginForm(email=session["user_email"])
+    if form.is_submitted():
         # access collections in database
         user_collection = db.users
         # access data in form submission
@@ -119,8 +129,11 @@ def profile():
     # access collections in database, grab the current profile, ok if empty
     user_collection = db.users
     current_profile = user_collection.find_one({"email": session["user_email"]})
-    form = ProfileForm()
-    if form.validate_on_submit():
+    # create a profile_form instance, populated by profile data
+    form = ProfileForm(data=current_profile)
+    # loop through profile experiences, create instances of experience_entry_form, append to profile_form
+    past_experiences = current_profile.get("experiences", [])
+    if form.is_submitted():
         # access data in form submission
         first_name = form.first_name.data
         last_name = form.last_name.data
@@ -131,6 +144,14 @@ def profile():
         summary = form.summary.data
         bfemail = form.bfemail.data
         bfpassword = form.bfpassword.data
+        # loop through submitted form entries to collect current experiences
+        current_experiences = []
+        for exp in form.experiences.entries:
+            exp_data = {"title": exp.data["title"], 
+                        "company": exp.data["company"], 
+                        "location": exp.data["location"], 
+                        "exp_description": exp.data["exp_description"]}
+            current_experiences.append(exp_data)
         # update the user's profile in profile collection, if not found, create and insert 
         user_collection.update(
             {"email": session["user_email"]},
@@ -143,14 +164,17 @@ def profile():
                 "address": address,
                 "summary": summary,
                 "bfemail": bfemail,
-                "bfpassword": bfpassword                
-            }}, upsert=False)
+                "bfpassword": bfpassword,
+                "experiences": current_experiences,
+                "testing": "Success"    
+            }}, upsert=True)
         # create a new user object and store locally
-        new_user = UserProfile(bfemail, bfpassword, first_name, last_name, major, description)
-        bear_modifier = BearFounderModifier(new_user)
-        bear_modifier.modify()
+        # new_user = UserProfile(bfemail, bfpassword, first_name, last_name, major, description)
+        # bear_modifier = BearFounderModifier(new_user)
+        # bear_modifier.modify()
         # redirect to profile page, with updated information, ready for next update
         return redirect('/profile')
     else:
         # render profile page when form is not submitted yet
         return render_template('profile.html', form=form)
+
