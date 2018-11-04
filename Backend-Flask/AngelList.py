@@ -2,15 +2,15 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
+from User import *
 
-class AngelListModifier(object):
+class AngelListModifier:
     def __init__(self, user):
         self.profile = user.profile
         self.experiences = user.profile['experiences']
         self.projects = user.profile['projects']
         self.username = user.alemail
         self.password = user.alpassword
-
 
     def login(self, username, password):
         self.driver.find_element_by_name("user[email]").send_keys(username)
@@ -156,4 +156,3 @@ class AngelListModifier(object):
         self.driver.refresh()
         self.add_experience_second(self.experiences)
         self.driver.close()
-
