@@ -1,4 +1,3 @@
-
 class UserProfile(object):
 
     #[_ID, "first name", "last name", "Description", "Ethnicity", "Phone Number", "Current Address"
@@ -44,7 +43,6 @@ class Address(object):
         self.country = country
         self.zip_code = zip_code
 
-
 class Education(object):
     def __init__(self, school, degree, field_of_study, grade, activities_societies, from_year,
                  description, to_year = "Present"):
@@ -57,7 +55,6 @@ class Education(object):
         self.to_year = to_year
         self.description = description
 
-
 class Experience(object):
     def __init__(self, title, company, location, start_date, end_date, links = [], description = "", workhere = "False", summary=""):
         self.title = title
@@ -69,7 +66,6 @@ class Experience(object):
         self.workhere = workhere
         self.description = description
         self.summary = summary
-
 
 class Links(object):
     def __init__(self, personal_website, linkedin, github, stackOverflow):
@@ -89,3 +85,4 @@ class Project(object):
         self.start_date = start_time
         self.end_date = end_time
         self.currentWorking = currentWorking
+        
