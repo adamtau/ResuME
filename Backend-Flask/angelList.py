@@ -2,7 +2,6 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
-from User import *
 
 class AngelListModifier(object):
     def __init__(self, user):
@@ -158,9 +157,3 @@ class AngelListModifier(object):
         self.add_experience_second(self.experiences)
         self.driver.close()
 
-myExperience = [Experience("Frontend Developer", "Twitch", "", "10/01/2018", "11/01/2018", description="I worked as a backend engineer", workhere=False)]
-myProject = [Project("ResuMe", "Core Backend Developer", "Update your resume on multiple websites with one click", "10/01/2018", currentWorking=True)]
-myProfile = UserProfile(1, 2, "adamtao@berkeley.edu", "iloveuforever274", "Chaoqun", "Tao", "EECS", description="I am a legendary ** 3 programmer, hire me!",
-                        experiences=myExperience, projects=myProject)
-test = AngelListModifier(myProfile)
-test.modify()
