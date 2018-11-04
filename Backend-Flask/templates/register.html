@@ -2,12 +2,11 @@
   <head>
     <!-- ResuME icons and page title -->
     <title>ResuME Register</title>
-    <!-- <link rel="icon" size="104*86" href="images/icon.png">
-    <link rel="stylesheet" type="text/css" href="style.css"> -->
+    <link rel="icon" size="104*86" href="icon.png">
+    <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
   <head>
   <body>
     <form method="POST" action='/register' accept-charset="UTF-8">
-      {{ form.csrf_token }}
       <dl>
         <dt>{{ form.email.label }}
         <dd>{{ form.email }}

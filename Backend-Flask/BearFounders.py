@@ -28,7 +28,6 @@ class BearFounderModifier:
         actions.key_down(self.special_key)
         actions.send_keys("a")
         actions.key_up(self.special_key)
-        actions.pause(10)
         actions.send_keys(Keys.DELETE)
 
     def modify(self):

@@ -5,8 +5,8 @@ class UserProfile(object):
 
     #Experiences: [Title: , Company: , Location: , "" Start Date (Month, year): , End Date: ,UploadFiles, Links, WorkHere]
     #Educations: [School:, Degree, Field of Study, Grade, Activities and Societies:, From Year, to Year, Description]
-    def __init__(self, bfemail, bfpassword, first_name, last_name, major, description = "", ethnicity = "", currentAddress = "",
-                experiences =[], education =[], summary = "", courses =[], languages = [], skills = []):
+    def __init__(self, bfemail, bfpassword, first_name, last_name, major, description = "", ethnicity = "", currentAddress = "", summary = "", 
+                experiences = [], educations = [], courses = [], languages = [], skills = []):
         self.bfemail = bfemail
         self.bfpassword = bfpassword
         self.profile = {}
@@ -16,12 +16,19 @@ class UserProfile(object):
         self.profile['description'] = description
         self.profile['ethnicity'] = ethnicity
         self.profile['currentAddress'] = currentAddress
-        self.profile['experiences'] = experiences
-        self.profile['education'] = education
         self.profile['summary'] = summary
+        self.profile['experiences'] = experiences
+        self.profile['number_of_experiences'] = len(experiences)
+        self.profile['education'] = educations
+        self.profile['number_of_educations'] = len(education)
         self.profile['courses'] = courses
+        self.profile['number_of_courses'] = len(courses)
         self.profile['languages'] = languages
+        self.profile['number_of_languages'] = len(languages)
         self.profile['skills'] = skills
+        self.profile['number_of_skills'] = len(skills)
+        self.profile['bfemail'] = bfemail
+        self.profile['bfpassword'] = bfpassword
 
 class Address(object):
     def __init__(self, street, street_number, state, country, zip_code):
@@ -30,7 +37,6 @@ class Address(object):
         self.state = state
         self.country = country
         self.zip_code = zip_code
-
 
 class Education(object):
     def __init__(self, school, degree, field_of_study, grade, activities_societies, from_year,
@@ -44,7 +50,6 @@ class Education(object):
         self.to_year = to_year
         self.description = description
 
-
 class Experience(object):
     def __init__(self, title, company, location, start_date, end_date, uploadFiles = [], links = [], description = "", workhere = "False"):
         self.title = title
@@ -56,7 +61,6 @@ class Experience(object):
         self.links = links
         self.workhere = workhere
         self.description = description
-
 
 class Links(object):
     def __init__(self, personal_website, linkedin, github, stackOverflow):

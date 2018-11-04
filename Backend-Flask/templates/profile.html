@@ -7,7 +7,6 @@
   <head>
   <body>
     <form method="POST" action='/profile' accept-charset="UTF-8">
-      {{ form.csrf_token }}
       <dl>
         <dt>{{ form.first_name.label }}
         <dd>{{ form.first_name }}
@@ -27,6 +26,8 @@
         <dd>{{ form.bfemail }}
         <dt>{{ form.bfpassword.label }}
         <dd>{{ form.bfpassword }}
+        <dt>{{ form.experiences.label }}
+        <dd>{{ form.experiences }}
         <dt>{{ form.submit }}
       </dl>
     </form>
