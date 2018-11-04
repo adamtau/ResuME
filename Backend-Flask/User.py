@@ -20,7 +20,7 @@ class UserProfile(object):
         self.profile['experiences'] = experiences
         self.profile['number_of_experiences'] = len(experiences)
         self.profile['education'] = educations
-        self.profile['number_of_educations'] = len(education)
+        self.profile['number_of_educations'] = len(educations)
         self.profile['courses'] = courses
         self.profile['number_of_courses'] = len(courses)
         self.profile['languages'] = languages
