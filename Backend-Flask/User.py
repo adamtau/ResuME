@@ -59,7 +59,7 @@ class Education(object):
 
 
 class Experience(object):
-    def __init__(self, title, company, location, start_date, end_date, links = [], description = "", workhere = "False"):
+    def __init__(self, title, company, location, start_date, end_date, links = [], description = "", workhere = "False", summary=""):
         self.title = title
         self.company = company
         self.location = location
@@ -68,6 +68,7 @@ class Experience(object):
         self.links = links
         self.workhere = workhere
         self.description = description
+        self.summary = summary
 
 
 class Links(object):
