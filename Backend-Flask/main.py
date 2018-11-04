@@ -4,8 +4,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, ValidationError
 import datetime
-from .User import *
-from .BearFounders import *
+#from .User import *
+#from .BearFounders import *
 
 app = Flask(__name__)
 
@@ -77,9 +77,9 @@ def register():
         user_exist = user_collection.find_one({"email": email})
         # if not, create a new user document in user collection
         if not user_exist:
-            new_user = {"email": email, 
-                        "username": username, 
-                        "password": password, 
+            new_user = {"email": email,
+                        "username": username,
+                        "password": password,
                         "date": datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')}
             user_collection.insert_one(new_user)
         # in both cases, redirect to login page after handling the form
@@ -112,7 +112,7 @@ def login():
             return redirect('/login')
     else:
         # render login page when form is not submitted yet
-        return render_template('login.html', form=form)
+        return render_template('index.html', form=form)
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
@@ -131,7 +131,7 @@ def profile():
         summary = form.summary.data
         bfemail = form.bfemail.data
         bfpassword = form.bfpassword.data
-        # update the user's profile in profile collection, if not found, create and insert 
+        # update the user's profile in profile collection, if not found, create and insert
         user_collection.update(
             {"email": session["user_email"]},
             {'$set': {
@@ -143,7 +143,7 @@ def profile():
                 "address": address,
                 "summary": summary,
                 "bfemail": bfemail,
-                "bfpassword": bfpassword                
+                "bfpassword": bfpassword
             }}, upsert=False)
         # create a new user object and store locally
         new_user = UserProfile(bfemail, bfpassword, first_name, last_name, major, description)
