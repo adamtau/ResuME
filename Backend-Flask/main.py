@@ -4,8 +4,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, FieldList, FormField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError
 import datetime
-from .User import *
-from .BearFounders import *
+from User import *
+from BearFounders import *
 
 app = Flask(__name__)
 
@@ -35,7 +35,6 @@ db = mongo.db
 
 class RegisterForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired()])
-    username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Register')
 
@@ -80,14 +79,12 @@ def register():
         user_collection = db.users
         # access data in form submission
         email = form.email.data
-        username = form.username.data
         password = form.password.data
         # query database if the email is already registered
         user_exist = user_collection.find_one({"email": email})
         # if not, create a new user document in user collection
         if not user_exist:
             new_user = {"email": email, 
-                        "username": username, 
                         "password": password, 
                         "date": datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')}
             user_collection.insert_one(new_user)

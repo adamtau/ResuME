@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
-from .User import *
+from User import *
 
 # me = UserProfile("adamtao@berkeley.edu", p, 1, "Chaoqun", "Tao", description = "Hi there! I am a Berkeley EECS student graduating by May 2020. With my enthusiasm for Computer Science, I am thrilled to contribute to ideas that could make a difference. I am familiar with data structures, algorithms, and Artificial Intelligence. I am experienced in Python, Java, C, etc. Let me handle the technical side of your startup!")
 # md = BearFounderModifier(me)
